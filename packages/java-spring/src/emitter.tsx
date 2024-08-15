@@ -14,6 +14,7 @@ import { Class } from "@alloy-js/java";
 export async function $onEmit(context: EmitContext) {
   const types = queryTypes(context);
   console.log('data types:', types.dataTypes[0].properties.values());
+  console.log('ops :', types.ops[0]);
 
 
 
