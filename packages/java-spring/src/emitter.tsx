@@ -2,15 +2,20 @@ import * as ay from "@alloy-js/core";
 import { code, refkey } from "@alloy-js/core";
 import * as jv from "@alloy-js/java";
 import { EmitContext, Model, Operation } from "@typespec/compiler";
+import { ModelDeclaration} from "@typespec/emitter-framework/java";
 import { TypeCollector } from "@typespec/emitter-framework";
 import fs from "node:fs";
 import { mkdir, rm, writeFile } from "node:fs/promises";
 import { dirname, join } from "node:path";
 import { SpringProject } from "./spring/components/index.js";
 import { springFramework } from "./spring/libraries/index.js";
+import { Class } from "@alloy-js/java";
 
 export async function $onEmit(context: EmitContext) {
   const types = queryTypes(context);
+  console.log('data types:', types.dataTypes[0].properties.values());
+
+
 
   // TODO: Indent is really weird in generated output
   const result = ay.render(
@@ -25,6 +30,12 @@ export async function $onEmit(context: EmitContext) {
               </jv.Method>
             </jv.Class>
           </jv.SourceFile>
+
+          <jv.PackageDirectory package={"models"}>
+            <jv.SourceFile path={"Task.java"}>
+              <ModelDeclaration type={types.dataTypes[0]}></ModelDeclaration>
+            </jv.SourceFile>
+          </jv.PackageDirectory>
         </jv.PackageDirectory>
       </SpringProject>
     </ay.Output>,
