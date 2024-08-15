@@ -12,24 +12,21 @@ export interface ModelDeclarationProps {
 }
 
 export function ModelDeclaration(props: ModelDeclarationProps) {
-  const fields = fieldsFromType(props);
+  const members = membersFromType(props);
   return (
     <jv.Class name={props.type.name}>
-      {fields}
+      {members}
     </jv.Class>
   )
 }
 
-function fieldsFromType(props: ModelDeclarationProps) {
+function membersFromType(props: ModelDeclarationProps) {
   // Define the iterable for properties
   const typeMembers = props.type.properties.values();
 
   // Use mapJoin to iterate and create JSX for each ModelProperty
-  return mapJoin(Array.from(typeMembers), (property) => {
-    if ("name" in property.type && property.type.name === 'string') {
-      return <jv.Variable name={property.name} type={property.type.name}></jv.Variable>;
-    }
-    return null; // Return null if the condition is not met
-  }, { joiner: "\n" });
+  return mapJoin(Array.from(typeMembers), (member) => (
+    <ModelMember type={member} />
+  ), { joiner: "\n" });
 }
 
