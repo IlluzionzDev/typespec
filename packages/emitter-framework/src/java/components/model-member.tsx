@@ -1,14 +1,14 @@
 import { ModelProperty, Type } from "@typespec/compiler";
-import * as jv from "@alloy-js/java";
-import { useJavaNamePolicy } from "@alloy-js/java";
+import { Method, useJavaNamePolicy } from "@alloy-js/java";
 import { TypeExpression } from "./type-expression.js";
 
 
 export interface ModelMemberProps {
   type: ModelProperty;
+  memberGetAndSetMethod: boolean;
 }
 
-export function ModelMember({type} : ModelMemberProps) {
+export function ModelMember({type, memberGetAndSetMethod} : ModelMemberProps) {
   /**
    * In our simple tsp file with a model like:
    * model Task {
@@ -21,10 +21,16 @@ export function ModelMember({type} : ModelMemberProps) {
    * ModelProperty.type.name is "string". The ModelProperty.type.kind is scalar, in the type-expression.tsx
    * we handle taking this ModelProperty.type.name and getting a representation for it in java.
    * */
-  return(
-<><TypeExpression type={type.type}></TypeExpression> {type.name};
-</>
-  )
+
+  if (memberGetAndSetMethod) {
+    const returnType = <TypeExpression type={type.type}></TypeExpression>;
+    const setParams: Record<string, string> = {[type.name]: returnType};
+    const getter = <Method name={"get" + type.name} return={returnType} accessModifier={"public"}>{`return ${type.name};`}</Method>
+    const setter = <Method name={"set" + type.name} return={returnType} accessModifier={"public"} parameters={setParams}>{`this.${type.name} = ${type.name};`}</Method>
+    return<>{getter}{`\n`}{setter}</>
+  }
+
+  return<><TypeExpression type={type.type}></TypeExpression> {type.name};</>
 }
 
 
