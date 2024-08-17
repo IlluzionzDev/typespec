@@ -14,11 +14,7 @@ export function ModelConstructor(props : ModelConstructorProps) {
   const params = createTypeRecord(properties);
   const members = constructorMembersMapJoin(properties);
   console.log('constructor members:', members);
-  return(
-    <Constructor parameters={params} accessModifier={'public'}>
-    {members}
-    </Constructor>
-  )
+  return<Constructor parameters={params} accessModifier={'public'}>{members}</Constructor>
 }
 
 function createTypeRecord(properties: ModelProperty[]): Record<string, string> {
