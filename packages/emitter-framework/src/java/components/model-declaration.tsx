@@ -6,27 +6,37 @@ import { code, mapJoin } from "@alloy-js/core";
 import { Model, ModelProperty, Operation, Type } from "@typespec/compiler";
 import { isInterface, isModel } from "../../core/index.js";
 import { ModelMember } from "./model-member.js";
+import { ModelConstructor } from "./model-constructor.js";
+import { ClassProps, DeclarationProps } from "@alloy-js/java";
 
-export interface ModelDeclarationProps {
+export interface ModelDeclarationProps{
   type: Model;
 }
 
 export function ModelDeclaration(props: ModelDeclarationProps) {
   const members = membersFromType(props);
+  const constructor = modelConstructor(props);
   return (
     <jv.Class name={props.type.name}>
-      {members}
+    {members}
+    {constructor}
     </jv.Class>
   )
 }
 
+function modelConstructor(props: ModelDeclarationProps) {
+  const typeMembers = props.type.properties.values();
+  return(
+    <ModelConstructor properties={Array.from(typeMembers)}/>
+  )
+}
+
+
 function membersFromType(props: ModelDeclarationProps) {
-  // Define the iterable for properties
   const typeMembers = props.type.properties.values();
 
-  // Use mapJoin to iterate and create JSX for each ModelProperty
   return mapJoin(Array.from(typeMembers), (member) => (
     <ModelMember type={member} />
-  ), { joiner: "\n" });
+  ), { joiner: "" });
 }
 

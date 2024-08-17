@@ -4,7 +4,7 @@ import { useJavaNamePolicy } from "@alloy-js/java";
 import { TypeExpression } from "./type-expression.js";
 
 
-export interface ModelMemberProps{
+export interface ModelMemberProps {
   type: ModelProperty;
 }
 
@@ -22,8 +22,7 @@ export function ModelMember({type} : ModelMemberProps) {
    * we handle taking this ModelProperty.type.name and getting a representation for it in java.
    * */
   return(
-    <>
-      <TypeExpression type={type.type}></TypeExpression> {type.name};
+    <><TypeExpression type={type.type}></TypeExpression> {type.name};
     </>
   )
 }
