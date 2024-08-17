@@ -1,5 +1,5 @@
 import { ModelProperty } from "@typespec/compiler";
-import { Method } from "@alloy-js/java";
+import { Method, Variable } from "@alloy-js/java";
 import { TypeExpression } from "./type-expression.js";
 
 
@@ -26,12 +26,12 @@ export function ModelMember({type, memberGetAndSetMethod} : ModelMemberProps) {
   if (memberGetAndSetMethod) {
     const returnType = <TypeExpression type={type.type}></TypeExpression>;
     const setParams: Record<string, string> = {[type.name]: returnType};
-    const getter = <Method name={"get" + type.name} return={returnType} accessModifier={"public"}>{`return ${type.name};`}</Method>
-    const setter = <Method name={"set" + type.name} return={returnType} accessModifier={"public"} parameters={setParams}>{`this.${type.name} = ${type.name};`}</Method>
+    const getter = <Method name={"get" + type.name} return={returnType} accessModifier={"public"}>{`return ${type.name};`}</Method>;
+    const setter = <Method name={"set" + type.name} return={returnType} accessModifier={"public"} parameters={setParams}>{`this.${type.name} = ${type.name};`}</Method>;
     return<>{getter}{`\n`}{setter}</>
   }
-
-  return<><TypeExpression type={type.type}></TypeExpression> {type.name};</>
+  const javaType = <TypeExpression type={type.type}></TypeExpression>;
+  return<Variable type={javaType} name={type.name} accessModifier={"private"}></Variable>
 }
 
 
