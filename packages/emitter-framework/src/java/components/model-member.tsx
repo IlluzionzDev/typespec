@@ -1,5 +1,5 @@
-import { ModelProperty, Type } from "@typespec/compiler";
-import { Method, useJavaNamePolicy } from "@alloy-js/java";
+import { ModelProperty } from "@typespec/compiler";
+import { Method } from "@alloy-js/java";
 import { TypeExpression } from "./type-expression.js";
 
 

@@ -1,4 +1,4 @@
-import { ModelProperty, Type } from "@typespec/compiler";
+import { ModelProperty } from "@typespec/compiler";
 
 
 export interface ConstructorMemberProps {

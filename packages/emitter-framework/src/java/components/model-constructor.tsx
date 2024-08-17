@@ -1,8 +1,7 @@
 import { ModelProperty } from "@typespec/compiler";
 import { TypeExpression } from "./type-expression.js";
-import { Constructor, ConstructorProps, Variable } from "@alloy-js/java";
+import { Constructor } from "@alloy-js/java";
 import { mapJoin } from "@alloy-js/core";
-import { ModelMember } from "./model-member.js";
 import { ConstructorMember } from "./constructor-member.js";
 
 export interface ModelConstructorProps{
