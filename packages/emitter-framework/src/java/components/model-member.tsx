@@ -22,6 +22,7 @@ export function ModelMember({type, memberGetAndSetMethod} : ModelMemberProps) {
    * we handle taking this ModelProperty.type.name and getting a representation for it in java.
    * */
 
+  //todo: Fix naming, Method component does not correctly set the name to camelCase for some reason.
   if (memberGetAndSetMethod) {
     const returnType = <TypeExpression type={type.type}></TypeExpression>;
     const setParams: Record<string, string> = {[type.name]: returnType};
