@@ -2,7 +2,7 @@ import * as ay from "@alloy-js/core";
 import { code, refkey } from "@alloy-js/core";
 import * as jv from "@alloy-js/java";
 import { EmitContext, Model, Operation } from "@typespec/compiler";
-import { ModelDeclaration} from "@typespec/emitter-framework/java";
+import { ModelDeclaration, ModelSourceFile } from "@typespec/emitter-framework/java";
 import { TypeCollector } from "@typespec/emitter-framework";
 import fs from "node:fs";
 import { mkdir, rm, writeFile } from "node:fs/promises";
@@ -16,7 +16,10 @@ export async function $onEmit(context: EmitContext) {
   console.log('data types:', types.dataTypes[0].properties.values());
   console.log('ops :', types.ops[0]);
 
+  const model = ay.mapJoin(types.dataTypes, m => {
+    return <ModelDeclaration type={types.dataTypes[0]}></ModelDeclaration>
 
+  })
 
   // TODO: Indent is really weird in generated output
   const result = ay.render(
@@ -33,9 +36,8 @@ export async function $onEmit(context: EmitContext) {
           </jv.SourceFile>
 
           <jv.PackageDirectory package={"models"}>
-            <jv.SourceFile path={"Task.java"}>
-              <ModelDeclaration type={types.dataTypes[0]}></ModelDeclaration>
-            </jv.SourceFile>
+            <ModelSourceFile type={types.dataTypes[0]}>
+            </ModelSourceFile>
           </jv.PackageDirectory>
         </jv.PackageDirectory>
       </SpringProject>
