@@ -41,22 +41,7 @@ function constructorMembersMapJoin(properties: ModelProperty[]) {
 
   return mapJoin(Array.from(properties), (property) => (
     <ConstructorMember type={property}/>
-  ), { joiner: "" });
-
-}
-
-function constructorMembers(properties: ModelProperty[]) {
-  console.log('Properties received by constructorMembers:', properties);
-
-  const members = properties.map(property => {
-    console.log('Processing property:', property);
-    return (
-      <Variable type={"this."} name={property.name} value={property.name}></Variable>
-    );
-  });
-
-  console.log('Members generated:', members);
-  return members;
+  ), { joiner: "\n" });
 }
 
 
