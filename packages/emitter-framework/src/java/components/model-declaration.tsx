@@ -9,17 +9,11 @@ export interface ModelDeclarationProps{
 }
 
 export function ModelDeclaration(props: ModelDeclarationProps) {
-  const members = membersFromType(props);
-  const gettersAndSetters = gettersAndSettersFromType(props)
-  const constructor = modelConstructor(props);
-  return<>
-<jv.Class name={props.type.name}>{members}
 
-{constructor}
+  const body = getBody(props);
 
-{gettersAndSetters}
-</jv.Class>
-</>
+  return<jv.Class name={props.type.name}>{body}
+  </jv.Class>
 }
 
 function modelConstructor(props: ModelDeclarationProps) {
@@ -40,5 +34,13 @@ function membersFromType(props: ModelDeclarationProps) {
   return mapJoin(Array.from(typeMembers), (member) => (
     <ModelMember type={member} memberGetAndSetMethod={false} />
   ), { joiner: "\n" });
+}
+
+//There may be a cleaner implementation but this gets the job done for now.
+function getBody(props: ModelDeclarationProps) {
+  const members = membersFromType(props);
+  const gettersAndSetters = gettersAndSettersFromType(props)
+  const constructor = modelConstructor(props);
+  return<>{members}{`\n`}{constructor}{`\n`}{gettersAndSetters}</>
 }
 
