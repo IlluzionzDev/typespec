@@ -3,6 +3,7 @@ import { IntrinsicType, Model, Scalar } from "@typespec/compiler";
 import { refkey } from "@alloy-js/core";
 import { TypeExpressionProps, UnionExpression } from "../../typescript/index.js";
 import { Value } from "@alloy-js/java";
+import { isArray } from "node:util";
 
 export function TypeExpression({ type }: TypeExpressionProps) {
 
@@ -21,10 +22,12 @@ export function TypeExpression({ type }: TypeExpressionProps) {
         </>
       );
     case "Model":
-      // if (isArray(type)) {
-      //   const elementType = type.indexer.value;
-      //   return <ArrayExpression elementType={elementType} />;
-      // }
+      if (type.name == "Array") {
+        if (type.indexer?.value.kind == "Model") {
+          console.log("Array Properties", type.indexer?.value.name);
+          return type.indexer.value.name + "[]";
+        }
+      }
 
       // if (isRecord(type)) {
       //   const elementType = type.indexer.value;
