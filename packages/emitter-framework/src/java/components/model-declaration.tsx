@@ -49,6 +49,6 @@ function getBody(props: ModelDeclarationProps) {
   const parameterizedConstructor = modelParameterizedConstructor(props);
   const constructor = <Constructor accessModifier={"public"}></Constructor>
 
-  return<>{members}{`\n`}{constructor}{`\n`}{parameterizedConstructor}{`\n`}{gettersAndSetters}</>
+  return<>{members}{`\n\n`}{constructor}{`\n\n`}{parameterizedConstructor}{`\n\n`}{gettersAndSetters}</>
 }
 
