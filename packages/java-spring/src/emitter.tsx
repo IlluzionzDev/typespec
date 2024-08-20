@@ -13,13 +13,16 @@ import { Class } from "@alloy-js/java";
 
 export async function $onEmit(context: EmitContext) {
   const types = queryTypes(context);
-  console.log('data types:', types.dataTypes[0].properties.values());
-  console.log('ops :', types.ops[0]);
+  const dataTypes = types.dataTypes
+  dataTypes.forEach((dataType, index) => {
+    console.log(`\n======= Entry ${index} =======`);
+    console.log(`Data Type Name: ${dataType.name}`);
+    console.log('Details:', dataType);
+    console.log('Properties:', [...dataType.properties.values()]);
+    console.log('===============================\n');
+  });
+  console.log('ops :', types.ops);
 
-  const model = ay.mapJoin(types.dataTypes, m => {
-    return <ModelDeclaration type={types.dataTypes[0]}></ModelDeclaration>
-
-  })
 
   // TODO: Indent is really weird in generated output
   const result = ay.render(
@@ -36,7 +39,7 @@ export async function $onEmit(context: EmitContext) {
           </jv.SourceFile>
 
           <jv.PackageDirectory package={"models"}>
-            <ModelSourceFile type={types.dataTypes[0]}>
+            <ModelSourceFile type={types.dataTypes[4]}>
             </ModelSourceFile>
           </jv.PackageDirectory>
         </jv.PackageDirectory>
