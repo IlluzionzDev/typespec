@@ -14,14 +14,14 @@ import { Class } from "@alloy-js/java";
 export async function $onEmit(context: EmitContext) {
   const types = queryTypes(context);
   const dataTypes = types.dataTypes
-  dataTypes.forEach((dataType, index) => {
+  /*dataTypes.forEach((dataType, index) => {
     console.log(`\n======= Entry ${index} =======`);
     console.log(`Data Type Name: ${dataType.name}`);
     console.log('Details:', dataType);
     console.log('Properties:', [...dataType.properties.values()]);
     console.log('===============================\n');
   });
-  console.log('ops :', types.ops);
+  console.log('ops :', types.ops);*/
 
 
   // TODO: Indent is really weird in generated output
@@ -39,7 +39,9 @@ export async function $onEmit(context: EmitContext) {
           </jv.SourceFile>
 
           <jv.PackageDirectory package={"models"}>
-            <ModelSourceFile type={types.dataTypes[4]}>
+            <ModelSourceFile type={types.dataTypes[1]}>
+            </ModelSourceFile>
+            <ModelSourceFile type={types.dataTypes[3]}>
             </ModelSourceFile>
           </jv.PackageDirectory>
         </jv.PackageDirectory>
