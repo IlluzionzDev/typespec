@@ -1,31 +1,32 @@
-import * as jv from "@alloy-js/java";
 import { mapJoin } from "@alloy-js/core";
-import { Model} from "@typespec/compiler";
+import { Model } from "@typespec/compiler";
 import { ModelMember } from "./model-member.js";
 import { ModelConstructor } from "./model-constructor.js";
-import { Constructor } from "@alloy-js/java";
+import { Constructor,Class } from "@alloy-js/java";
+import { getModelClassName, getNameTypeRecordFromProperties } from "../model-utils.js";
 
 export interface ModelDeclarationProps{
   type: Model;
 }
 
-export function ModelDeclaration(props: ModelDeclarationProps) {
-  const body = getBody(props);
+export function ModelDeclaration({ type }: ModelDeclarationProps) {
+  const body = getBody(type);
+  const name = getModelClassName(type);
 
-  return<jv.Class name={props.type.name}>{body}
-  </jv.Class>
+
+  return<Class name={name}>{body}
+  </Class>
 }
 
 
-function modelParameterizedConstructor(props: ModelDeclarationProps) {
-  const typeMembers = props.type.properties.values();
-
-  return<ModelConstructor types={Array.from(typeMembers)}/>
+function modelParameterizedConstructor(type: Model) {
+  const params = getNameTypeRecordFromProperties(type);
+  return<ModelConstructor type={type} parameters={params}/>
 }
 
 
-function gettersAndSettersFromType(props: ModelDeclarationProps) {
-  const typeMembers = props.type.properties.values();
+function gettersAndSettersFromType(type: Model) {
+  const typeMembers = type.properties.values();
 
   return mapJoin(Array.from(typeMembers), (member) => (
     <ModelMember type={member} memberGetAndSetMethod={true} />
@@ -33,8 +34,8 @@ function gettersAndSettersFromType(props: ModelDeclarationProps) {
 }
 
 
-function membersFromType(props: ModelDeclarationProps) {
-  const typeMembers = props.type.properties.values();
+function membersFromType(type: Model) {
+  const typeMembers = type.properties.values();
 
   return mapJoin(Array.from(typeMembers), (member) => (
     <ModelMember type={member} memberGetAndSetMethod={false} />
@@ -43,11 +44,11 @@ function membersFromType(props: ModelDeclarationProps) {
 
 
 //There may be a cleaner implementation but this gets the job done for now.
-function getBody(props: ModelDeclarationProps) {
-  const members = membersFromType(props);
-  const gettersAndSetters = gettersAndSettersFromType(props)
-  const parameterizedConstructor = modelParameterizedConstructor(props);
-  const constructor = <Constructor accessModifier={"public"}></Constructor>
+function getBody(type: Model) {
+  const members = membersFromType(type);
+  const gettersAndSetters = gettersAndSettersFromType(type)
+  const parameterizedConstructor = modelParameterizedConstructor(type);
+  const constructor = <Constructor accessModifier={"public"} name={type.name}></Constructor>
 
   return<>{members}{`\n\n`}{constructor}{`\n\n`}{parameterizedConstructor}{`\n\n`}{gettersAndSetters}</>
 }
