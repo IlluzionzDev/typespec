@@ -1,12 +1,12 @@
-import { isDeclaration } from "../../core/index.js";
-import { IntrinsicType, Model, Scalar } from "@typespec/compiler";
-import { refkey } from "@alloy-js/core";
-import { TypeExpressionProps, UnionExpression } from "../../typescript/index.js";
+import { IntrinsicType, Model, Scalar, Type } from "@typespec/compiler";
 import { Value } from "@alloy-js/java";
-import { isArray } from "node:util";
+import { getModelName, getScalarValueSv } from "../model-utils.js";
+
+export interface TypeExpressionProps {
+  type: Type;
+}
 
 export function TypeExpression({ type }: TypeExpressionProps) {
-
   switch (type.kind) {
     case "Scalar":
     case "Intrinsic":
@@ -21,13 +21,28 @@ export function TypeExpression({ type }: TypeExpressionProps) {
           {type.enum.name}.{type.name}
         </>
       );
+    case "ModelProperty":
+      const sv = getScalarValueSv(type);
+
+      if (sv) {
+        return intrinsicNameToJavaType.get(sv) ? intrinsicNameToJavaType.get(sv) : sv;
+      }
+
+      return <TypeExpression type={type.type}/>;
     case "Model":
+
       if (type.name == "Array") {
         if (type.indexer?.value.kind == "Model") {
-          console.log("Array Properties", type.indexer?.value.name);
           return type.indexer.value.name + "[]";
         }
       }
+
+
+      if (type.name != "Array" && type.name != "Record") {
+        return getModelName(type);
+      }
+
+
 
       // if (isRecord(type)) {
       //   const elementType = type.indexer.value;
