@@ -3,7 +3,7 @@ import { Model } from "@typespec/compiler";
 import { ModelMember } from "./model-member.js";
 import { ModelConstructor } from "./model-constructor.js";
 import { Constructor,Class } from "@alloy-js/java";
-import { getModelClassName, getNameTypeRecordFromProperties } from "../model-utils.js";
+import { getModelClassName, getNameTypeRecordFromProperties, getTypePropertiesArray } from "../model-utils.js";
 
 export interface ModelDeclarationProps{
   type: Model;
@@ -26,18 +26,18 @@ function modelParameterizedConstructor(type: Model) {
 
 
 function gettersAndSettersFromType(type: Model) {
-  const typeMembers = type.properties.values();
+  const typeMembers = getTypePropertiesArray(type);
 
-  return mapJoin(Array.from(typeMembers), (member) => (
+  return mapJoin(typeMembers, (member) => (
     <ModelMember type={member} memberGetAndSetMethod={true} />
   ), { joiner: "\n" });
 }
 
 
 function membersFromType(type: Model) {
-  const typeMembers = type.properties.values();
+  const typeMembers = getTypePropertiesArray(type);
 
-  return mapJoin(Array.from(typeMembers), (member) => (
+  return mapJoin(typeMembers, (member) => (
     <ModelMember type={member} memberGetAndSetMethod={false} />
   ), { joiner: "\n" });
 }
