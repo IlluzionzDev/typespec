@@ -30,35 +30,37 @@ export function emitOperations(context: EmitContext, ops: Record<string, Operati
 
         // TODO: Oncall RouteHandler that takes HttpOperation type. Can query everything off that to construct the route handler
         return (
-          <RestController name={nsOps.container?.name} routePath={routePath}>
-            <jv.Variable
-              private
-              final
-              type={refkey(`${nsOps.container?.name}Service`)}
-              name={serviceAccessor}
-            />
+          <jv.SourceFile path={`${nsOps.container?.name}Controller.java`}>
+            <RestController container={nsOps.container}>
+              <jv.Variable
+                private
+                final
+                type={refkey(`${nsOps.container?.name}Service`)}
+                name={serviceAccessor}
+              />
 
-            <jv.Annotation type={springFramework.Autowired} />
-            <jv.Constructor
-              public
-              parameters={{
-                [serviceAccessor]: refkey(`${nsOps.container?.name}Service`),
-              }}
-            >
-              this.{serviceAccessor} = {serviceAccessor};
-            </jv.Constructor>
+              <jv.Annotation type={springFramework.Autowired} />
+              <jv.Constructor
+                public
+                parameters={{
+                  [serviceAccessor]: refkey(`${nsOps.container?.name}Service`),
+                }}
+              >
+                this.{serviceAccessor} = {serviceAccessor};
+              </jv.Constructor>
 
-            {nsOps.operations.map((op) => {
-              return (
-                <>
-                  <jv.Annotation type={springFramework.GetMapping} />
-                  <jv.Method public return="String" name={op.operation?.name}>
-                    return {serviceAccessor}.{op.operation?.name}();
-                  </jv.Method>
-                </>
-              );
-            })}
-          </RestController>
+              {nsOps.operations.map((op) => {
+                return (
+                  <>
+                    <jv.Annotation type={springFramework.GetMapping} />
+                    <jv.Method public return="String" name={op.operation?.name}>
+                      return {serviceAccessor}.{op.operation?.name}();
+                    </jv.Method>
+                  </>
+                );
+              })}
+            </RestController>
+          </jv.SourceFile>
         );
       })}
     </>
