@@ -4,8 +4,8 @@ import { EmitContext } from "@typespec/compiler";
 import { TypeExpression } from "@typespec/emitter-framework/java";
 import { getRoutePath, HttpOperation, OperationContainer } from "@typespec/http";
 import { RestController } from "../spring/components/index.js";
-import { springFramework } from "../spring/libraries/index.js";
 import { SpringServiceEndpoint } from "../spring/components/spring-service-endpoint.js";
+import { springFramework } from "../spring/libraries/index.js";
 
 export interface OperationsGroup {
   container?: OperationContainer;
@@ -50,16 +50,16 @@ export function emitOperations(context: EmitContext, ops: Record<string, Operati
                 this.{serviceAccessor} = {serviceAccessor};
               </jv.Constructor>
 
-            {nsOps.operations.map((op) => {
-              return (
-                <>
-                  <SpringServiceEndpoint op={op}>
-                    return {serviceAccessor}.{op.operation?.name}();
-                  </SpringServiceEndpoint>
-                </>
-              );
-            })}
-          </RestController>
+              {nsOps.operations.map((op) => {
+                return (
+                  <>
+                    <SpringServiceEndpoint op={op}>
+                      return {serviceAccessor}.{op.operation?.name}();
+                    </SpringServiceEndpoint>
+                  </>
+                );
+              })}
+            </RestController>
           </jv.SourceFile>
         );
       })}
